@@ -109,7 +109,8 @@ func! s:gh_line(action, force_interactive) range
     " Get Directory & File Names
     let fullPath = resolve(expand("%:p"))
     " Git Commands
-    let commit = s:Commit(cdDir)
+    " let commit = s:Commit(cdDir)
+    let commit = "master"
     let gitRoot = system(cdDir . "git rev-parse --show-toplevel")
 
     " Strip Newlines
@@ -230,6 +231,17 @@ func! s:Action(remote_url, action)
       return '/blob/'
     elseif s:Cgit(a:remote_url)
       return '/tree'
+    endif
+  elseif a:action == 'tree'
+    if s:Github(a:remote_url)
+      return '/tree/'
+    " ???
+    " elseif s:Bitbucket(a:remote_url)
+    "   return '/src/'
+    " elseif s:GitLab(a:remote_url)
+    "   return '/blob/'
+    " elseif s:Cgit(a:remote_url)
+    "   return '/tree'
     endif
   endif
 endfunc
@@ -418,8 +430,10 @@ endfunc
 
 noremap <silent> <Plug>(gh-repo) :call <SID>gh_repo()<CR>
 
-command! -range GH <line1>,<line2>call <SID>gh_line('blob', g:gh_always_interactive)
-noremap <silent> <Plug>(gh-line) :call <SID>gh_line('blob', g:gh_always_interactive)<CR>
+" command! -range GH <line1>,<line2>call <SID>gh_line('blob', g:gh_always_interactive)
+" noremap <silent> <Plug>(gh-line) :call <SID>gh_line('blob', g:gh_always_interactive)<CR>
+command! -range GH <line1>,<line2>call <SID>gh_line('tree', g:gh_always_interactive)
+noremap <silent> <Plug>(gh-line) :call <SID>gh_line('tree', g:gh_always_interactive)<CR>
 
 command! -range GB <line1>,<line2>call <SID>gh_line('blame', g:gh_always_interactive)
 noremap <silent> <Plug>(gh-line-blame) :call <SID>gh_line('blame', g:gh_always_interactive)<CR>
